@@ -1,0 +1,28 @@
+# Virtual environment
+venv/
+.venv/
+
+# Data (large, and raw source data should not be committed)
+data/
+
+# Secrets
+.env
+.env.*
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+logs/
+*.log
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

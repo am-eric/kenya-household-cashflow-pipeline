@@ -1,0 +1,25 @@
+version: 2
+
+models:
+  - name: dim_household
+    columns:
+      - name: hh_ids
+        tests: [unique, not_null]
+
+  - name: mart_household_week
+    description: One row per household per week, including empty weeks.
+    columns:
+      - name: hh_ids
+        tests: [not_null]
+      - name: week_start
+        tests: [not_null]
+      - name: status
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['no_data', 'thin', 'ok']
+
+  - name: mart_household_week_flags
+    columns:
+      - name: is_flagged
+        tests: [not_null]

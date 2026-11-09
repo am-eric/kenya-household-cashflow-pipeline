@@ -1,0 +1,13 @@
+# dbt profile for the Airflow container. The password comes from the environment, never from this file.
+kfd_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('PGHOST', 'host.docker.internal') }}"
+      user: "{{ env_var('PGUSER', 'eric') }}"
+      password: "{{ env_var('PGPASSWORD') }}"
+      port: "{{ env_var('PGPORT', '5432') | as_number }}"
+      dbname: "{{ env_var('PGDATABASE', 'kfd') }}"
+      schema: clean
+      threads: 4

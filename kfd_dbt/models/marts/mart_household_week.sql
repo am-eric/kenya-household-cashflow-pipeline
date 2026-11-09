@@ -3,7 +3,7 @@ with bounds as (
     select hh_ids,
            date_trunc('week', min(trx_date))::date as first_week,
            date_trunc('week', max(trx_date))::date as last_week
-    from {{ source('clean', 'transactions') }}
+    from {{ ref('transactions') }}
     group by hh_ids
 ),
 
@@ -22,7 +22,7 @@ agg as (
         sum(value_kes) filter (where trx_class_code = 'income' and trx_direction = 'Outflow') as business_costs,
         sum(value_kes) filter (where trx_class_code = 'opex')                    as opex_out,
         count(*)                                                                 as n_rows
-    from {{ source('clean', 'transactions') }}
+    from {{ ref('transactions') }}
     group by 1, 2
 )
 

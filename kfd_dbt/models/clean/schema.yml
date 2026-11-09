@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: transactions
+    description: One row per income or opex transaction (grain = reported transaction).
+    columns:
+      - name: trx_key
+        tests: [unique, not_null]
+      - name: hh_ids
+        tests: [not_null]
+      - name: trx_date
+        tests: [not_null]
+      - name: value_kes
+        tests: [not_null]
+      - name: trx_class_code
+        tests:
+          - accepted_values:
+              values: ['income', 'opex']
+      - name: trx_direction
+        tests:
+          - accepted_values:
+              values: ['Inflow', 'Outflow']
+      - name: region
+        tests:
+          - accepted_values:
+              values: ['Nairobi', 'Mombasa', 'Makueni', 'Vihiga', 'Eldoret']
+  - name: findev_events
+    description: Real financial-device events (borrowing, lending, savings). Balance snapshots removed.
+    columns:
+      - name: trx_direction
+        tests:
+          - accepted_values:
+              values: ['Inflow', 'Outflow']
+  - name: rejected
+    description: Rows that failed a cleaning rule, with the reason.
+    columns:
+      - name: reject_reason
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['missing_household', 'bad_date', 'bad_value', 'bad_direction', 'unknown_region']

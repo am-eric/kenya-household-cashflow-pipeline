@@ -4,5 +4,5 @@ select
     min(region)    as region,
     min(trx_date)  as first_trx_date,
     max(trx_date)  as last_trx_date
-from {{ source('clean', 'transactions') }}
+from {{ ref('transactions') }}
 group by hh_ids

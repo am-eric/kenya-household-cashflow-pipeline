@@ -1,32 +1,11 @@
 version: 2
 
 sources:
-  - name: clean
-    schema: clean
-    description: Output of etl/clean.py + etl/load.py
+  - name: raw
+    schema: raw
+    description: Raw Kenya Financial Diaries csv, landed as-is (all text) by load_raw.py.
     tables:
-      - name: transactions
-        description: One row per income or opex transaction (grain = reported transaction).
+      - name: kfd_raw
         columns:
-          - name: trx_key
+          - name: row_id
             tests: [unique, not_null]
-          - name: hh_ids
-            tests: [not_null]
-          - name: trx_date
-            tests: [not_null]
-          - name: value_kes
-            tests: [not_null]
-          - name: trx_class_code
-            tests:
-              - accepted_values:
-                  values: ['income', 'opex']
-          - name: trx_direction
-            tests:
-              - accepted_values:
-                  values: ['Inflow', 'Outflow']
-          - name: region
-            tests:
-              - accepted_values:
-                  values: ['Nairobi', 'Mombasa', 'Makueni', 'Vihiga', 'Eldoret']
-      - name: findev_events
-        description: Real financial-device events (borrowing, lending, savings). Balance snapshots removed.

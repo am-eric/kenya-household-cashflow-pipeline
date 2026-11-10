@@ -26,6 +26,7 @@ vars:
   thin_week_min_rows: 10     # weeks with fewer rows are 'thin' and never flagged
   flag_k: 1.5                # flag when net < household mean - k * std dev
   min_ok_weeks: 8            # minimum usable weeks before a household baseline is trusted
+  min_ok_days: 30            # minimum days with data before a household's daily baseline is trusted
   coping_window_days: 28     # look this far after a flagged week for coping activity
 
 models:

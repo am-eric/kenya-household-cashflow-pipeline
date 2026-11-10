@@ -23,3 +23,20 @@ models:
     columns:
       - name: is_flagged
         tests: [not_null]
+  - name: mart_household_day
+    description: One row per household per day, including days with no data.
+    columns:
+      - name: hh_ids
+        tests: [not_null]
+      - name: day
+        tests: [not_null]
+      - name: status
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['no_data', 'ok']
+
+  - name: mart_household_day_flags
+    columns:
+      - name: is_flagged
+        tests: [not_null]

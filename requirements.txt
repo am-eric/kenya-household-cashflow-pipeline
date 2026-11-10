@@ -1,0 +1,8 @@
+# Python dependencies for load_raw.py, dbt and the Metabase builder (Python 3.11, see .python-version)
+psycopg2-binary==2.9.13
+python-dotenv==1.2.4
+dbt-core==1.12.6
+dbt-postgres==1.11.0
+# exploratory notebook only
+pandas==3.0.6
+ipykernel==7.4.0

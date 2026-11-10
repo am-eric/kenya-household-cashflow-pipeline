@@ -40,3 +40,13 @@ models:
     columns:
       - name: is_flagged
         tests: [not_null]
+
+  - name: mart_coping_after_flag
+    description: One row per flagged household-week, with borrowing, goods-on-credit and savings drawdown in the coping window after it.
+    columns:
+      - name: hh_ids
+        tests: [not_null]
+      - name: week_start
+        tests: [not_null]
+      - name: any_coping
+        tests: [not_null]

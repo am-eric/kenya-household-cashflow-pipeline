@@ -43,11 +43,13 @@ scoped as (
     select
         *,
         -- income/opex = cash flows; findev = real device events (balance rows, mode 18/19, and directionless rows are out);
-        -- cash/assets are snapshots and out of scope
-        (   trx_class_code in ('income', 'opex')
-         or (trx_class_code = 'findev'
-             and coalesce(trx_mode_code, '') not in ('18', '19')
-             and trx_direction is not null)
+        -- cash/assets are snapshots and out of scope.
+        -- KZI households (3 households, 3,131 raw rows) are not one of the five study regions, so they are dropped.
+        (   coalesce(left(hh_ids, 3), '') <> 'KZI'
+        and (   trx_class_code in ('income', 'opex')
+             or (trx_class_code = 'findev'
+                 and coalesce(trx_mode_code, '') not in ('18', '19')
+                 and trx_direction is not null))
         ) as in_scope
     from typed
 )

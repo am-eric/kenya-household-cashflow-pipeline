@@ -1,0 +1,21 @@
+trx_type_code,trx_type_desc,coping_kind
+2752,Friends and family: Borrowing,borrowing
+3395,Borrowing from an informal Group,borrowing
+3246,Moneylender or Shylock Borrowing,borrowing
+2750,Wage advance,borrowing
+2746,Credit card (including store card),borrowing
+2760,Individual Business or Agriculture Loan,borrowing
+2761,Payday loan,borrowing
+2762,Consumer/ personal loan (not payday loan),borrowing
+3247,Joint liability loan,borrowing
+3397,School Fees Loan,borrowing
+3398,Hire Purchase,borrowing
+3502,Group Enterprise Loan,borrowing
+4219,M-SHWARI Loan,borrowing
+2747,Informal credit at a store,credit_goods
+3394,Supplier credit,credit_goods
+4214,Okoa Jahazi,credit_goods
+3405,Keeping Money (Cash) at Home,savings_drawdown
+2720,Savings Account,savings_drawdown
+2721,Restricted savings/ specific use account (non-retirement),savings_drawdown
+4218,M-SHWARI Savings,savings_drawdown

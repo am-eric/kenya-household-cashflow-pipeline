@@ -40,3 +40,10 @@ models:
     marts:
       +schema: marts
       +materialized: view
+
+seeds:
+  kfd_dbt:
+    +schema: clean
+    coping_types:
+      +column_types:
+        trx_type_code: text

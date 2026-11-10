@@ -32,4 +32,6 @@ There is no linter or Python test suite; data quality is enforced via dbt tests 
 - Project `kfd_dbt`, profile `kfd_dbt`, Postgres target `dev`. Schemas: `staging`, `clean`, `marts` (set per folder in `dbt_project.yml`; `macros/generate_schema_name.sql` uses them exactly).
 - Source `raw.kfd_raw` (`models/sources.yml`) is what `load_raw.py` creates.
 - Business-logic thresholds are dbt vars in `dbt_project.yml`: `thin_week_min_rows`, `flag_k`, `min_ok_weeks`, `coping_window_days`. Use `var(...)` in models rather than hard-coding.
+- Marts come in weekly (`mart_household_week`, `mart_household_week_flags`) and daily (`mart_household_day`, `mart_household_day_flags`) versions with the same logic: a day/week is flagged when household net is more than `flag_k` std devs below that household's own mean. The Metabase dashboard uses the daily ones. Daily flags need `min_ok_days` days with data.
+- Metabase (`metabase/`): `docker compose up -d` there, UI on :3000, connects as read-only role `metabase_ro`. `python metabase/build_dashboard.py` creates/updates the dashboard through the API using `METABASE_API_KEY` from `.env`.
 - `marts/mart_coping_after_flag.sql` is currently a copy of `mart_household_week_flags.sql`; the coping logic is not written yet.

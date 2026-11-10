@@ -1,0 +1,15 @@
+# Metabase for the KFD dashboard.
+# Start:  cd metabase && docker compose up -d        UI: http://localhost:3000
+# Connects to Postgres as the read-only role metabase_ro (see docs in README); Metabase's own settings live in the volume.
+services:
+  metabase:
+    image: metabase/metabase:v0.65.3.6
+    network_mode: host                  # same setup as airflow/: Postgres is on the host at localhost:5432
+    environment:
+      MB_JETTY_PORT: "3000"
+      MB_DB_FILE: /metabase-data/metabase.db   # H2 file: fine for a single-user MVP, use Postgres for the app db in production
+    volumes:
+      - metabase_data:/metabase-data
+    restart: unless-stopped
+volumes:
+  metabase_data:

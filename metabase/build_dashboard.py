@@ -74,6 +74,36 @@ CARDS = [
              'from marts.mart_household_day_flags\n'
              'where is_flagged [[and region = {{region}}]]\n'
              'order by z_score asc limit 20'),
+    dict(name='Flagged weeks followed by coping (%)', display='scalar', region=True,
+         sql='select round(100.0 * avg(any_coping::int), 1) as pct_followed_by_coping\n'
+             'from marts.mart_coping_after_flag\n'
+             'where window_observed [[and region = {{region}}]]'),
+    dict(name='Median coping after a flagged week, as a multiple of the household usual', display='scalar', region=True,
+         sql='select round((percentile_cont(0.5) within group (order by coping_vs_baseline))::numeric, 2) as median_vs_usual\n'
+             'from marts.mart_coping_after_flag\n'
+             'where window_observed and coping_vs_baseline is not null [[and region = {{region}}]]'),
+    dict(name='Flagged weeks with a fully observed coping window', display='scalar', region=True,
+         sql='select count(*) as flagged_weeks\n'
+             'from marts.mart_coping_after_flag\n'
+             'where window_observed [[and region = {{region}}]]'),
+    dict(name='Average coping in the 28 days after a flagged week, by region (KES)', display='bar', region=False,
+         sql='select region,\n'
+             '       round(avg(borrowing_kes))        as borrowing_kes,\n'
+             '       round(avg(credit_goods_kes))     as credit_goods_kes,\n'
+             '       round(avg(savings_drawdown_kes)) as savings_drawdown_kes\n'
+             'from marts.mart_coping_after_flag\n'
+             'where window_observed\n'
+             'group by 1 order by 1',
+         viz={'graph.dimensions': ['region'],
+              'graph.metrics': ['borrowing_kes', 'credit_goods_kes', 'savings_drawdown_kes'],
+              'stackable.stack_type': 'stacked'}),
+    dict(name='Flagged weeks with the most coping afterwards', display='table', region=True,
+         sql='select hh_ids as household, region, week_start, net_kes,\n'
+             '       borrowing_kes, credit_goods_kes, savings_drawdown_kes, coping_kes_total,\n'
+             '       baseline_coping_kes_per_window as usual_coping_kes, coping_vs_baseline\n'
+             'from marts.mart_coping_after_flag\n'
+             'where window_observed [[and region = {{region}}]]\n'
+             'order by coping_kes_total desc limit 20'),
 ]
 # (card name, col, row, width, height) on Metabase's 24-column grid
 LAYOUT = [
@@ -85,6 +115,11 @@ LAYOUT = [
     ('Inflows vs outflows by region (KES)', 14, 10, 10, 7),
     ('Household spending by category (KES, top 10)', 0, 17, 24, 8),
     ('Biggest drops: 20 most unusual days', 0, 25, 24, 8),
+    ('Flagged weeks followed by coping (%)', 0, 33, 8, 3),
+    ('Median coping after a flagged week, as a multiple of the household usual', 8, 33, 8, 3),
+    ('Flagged weeks with a fully observed coping window', 16, 33, 8, 3),
+    ('Average coping in the 28 days after a flagged week, by region (KES)', 0, 36, 24, 7),
+    ('Flagged weeks with the most coping afterwards', 0, 43, 24, 8),
 ]
 
 db_id = next(d['id'] for d in api('GET', '/database')['data'] if d['name'] == DB_NAME)

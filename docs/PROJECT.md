@@ -477,6 +477,11 @@ The dashboard:
 | Inflows vs outflows by region | Money in versus money out in each region |
 | Household spending by category | Top 10 categories of household spending (excludes business costs) |
 | Biggest drops: 20 most unusual days | Table of household, region, day, net, usual net and z-score |
+| Flagged weeks followed by coping (%) | Share of flagged weeks (62.5%) where the household borrowed, bought on credit or drew down savings within 28 days |
+| Median coping vs the household usual | Coping after a flagged week as a multiple of the household's usual amount (median 0.35) |
+| Flagged weeks with a fully observed coping window | How many flagged weeks the coping figures are based on (518) |
+| Average coping after a flagged week, by region | Stacked bars of borrowing, goods on credit and savings drawdown (KES) |
+| Flagged weeks with the most coping afterwards | Table of the 20 flagged weeks followed by the most coping |
 
 The database role `metabase_ro` can `SELECT` from `clean` and `marts` only. It cannot see `raw` or `staging`, and it
 cannot create or change anything.
@@ -602,8 +607,8 @@ The raw table itself is only rebuilt by a successful `load_raw.py` run.
   with the end-of-year school and festive period, but the data alone cannot say why.
 * **The most extreme weeks.** Household KVIHC10 in the week of 4 February 2013 netted -13,115 KES against its usual
   -160 (6.7 standard deviations below).
-* **Coping is not clearly tied to flagged weeks.** Of the 518 flagged weeks with a fully observed 28-day window, 62.6%
-  were followed by borrowing, goods on credit or savings drawdown. For all other weeks the figure was 59.5%.
+* **Coping is not clearly tied to flagged weeks.** Of the 518 flagged weeks with a fully observed 28-day window, 62.5%
+  were followed by borrowing, goods on credit or savings drawdown. For all other weeks the figure was about 59.5%.
   That is a small difference, and the median flagged week saw only 0.35 times the household's typical coping amount.
   With this definition of coping, a low-net week does not reliably trigger measurable coping. Possible reasons are
   that coping is routine in these households (more than half of all windows contain some), that the flagged weeks are
@@ -632,7 +637,7 @@ reliable signal that a shock has happened.
 * **Thresholds are untuned.** `flag_k = 1.5` was not validated against known shocks, because the dataset does not
   record shocks directly.
 * **Daily flags are noisy.** See 6.7.
-* **The coping mart is not on the dashboard yet.**
+* **Coping is shown by flagged week, not by day.** The coping cards use the weekly flags, while the trend and drops cards use daily ones.
 * **Extreme amounts are not checked.** See section 8.
 * **Airflow runs as one container with SQLite metadata.** Fine for one DAG and one user, not for concurrent work.
 * **The dashboard has not been reviewed visually in this document.** Screenshots still need to be added to the
@@ -645,13 +650,12 @@ reliable signal that a shock has happened.
 
 ## 12. Next steps
 
-1. Put the coping mart on the dashboard, filtered to `window_observed`.
-2. Carry payment mode into `clean.transactions` and add a mode-of-payment breakdown.
-3. Add the missing quality checks: daily row-count drop alarm, amount upper bound, and a row-count reconciliation.
-4. Replace full-history baselines with rolling past-only baselines, and tune `flag_k` against a handful of
+1. Carry payment mode into `clean.transactions` and add a mode-of-payment breakdown.
+2. Add the missing quality checks: daily row-count drop alarm, amount upper bound, and a row-count reconciliation.
+3. Replace full-history baselines with rolling past-only baselines, and tune `flag_k` against a handful of
    households whose shocks can be confirmed.
-5. Make the large marts incremental, and move Airflow to a multi-container setup with Postgres metadata.
-6. Add screenshots and a recorded Airflow run to the repository as evidence.
+4. Make the large marts incremental, and move Airflow to a multi-container setup with Postgres metadata.
+5. Add screenshots and a recorded Airflow run to the repository as evidence.
 
 ---
 

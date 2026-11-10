@@ -6,17 +6,14 @@ services:
     build: .
     user: "${AIRFLOW_UID:-1000}:0"      # same uid as the host user, so files dbt writes into the repo stay yours
     command: standalone
-    ports:
-      - "8080:8080"
+    network_mode: host 
     env_file:
       - ../.env                         # PGUSER, PGPASSWORD, ... (the file is gitignored)
     environment:
-      PGHOST: host.docker.internal      # Postgres runs on the host machine
+      PGHOST: localhost        
       DBT_PROFILES_DIR: /opt/airflow/project/airflow
       KFD_PROJECT_DIR: /opt/airflow/project
       AIRFLOW__CORE__LOAD_EXAMPLES: "false"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     volumes:
       - ./dags:/opt/airflow/dags
       - ..:/opt/airflow/project         # repo: data/raw, load_raw.py, kfd_dbt/, airflow/profiles.yml
